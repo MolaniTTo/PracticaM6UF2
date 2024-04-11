@@ -1,66 +1,67 @@
-﻿using System;
+﻿using PracticaM6UF2.connections;
+using PracticaM6UF2.model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PracticaM6UF2.connections;
-using PracticaM6UF2.model;
 
 namespace PracticaM6UF2.cruds
 {
-    public class OrderpCRUD
+    public class SupplierCRUD
     {
-        public IList<Orderp> SelectAll()
+        
+        public IList<Supplier> SelectAll()
         {
-            IList<Orderp> orders;
+            IList<Supplier> suppliers;
             using (var session = SessionFactoryCloud.Open())
             {
-                orders = (from o in session.Query<Orderp>() select o).ToList();
+                suppliers = (from s in session.Query<Supplier>() select s).ToList();
                 session.Close();
             }
-            return orders;
+            return suppliers;
         }
 
-        public void Insert(Orderp order)
+        public void Insert(Supplier supplier)
         {
             var session = SessionFactoryCloud.Open();
             var tx = session.BeginTransaction();
-            session.Save(order);
+            session.Save(supplier);
             tx.Commit();
-            Console.WriteLine("Order {0} inserted", order.Id);
+            Console.WriteLine("Supplier {0} inserted", supplier.Name);
             session.Close();
         }
 
-        public Orderp SelectById(int id)
+        public Supplier SelectById(int id)
         {
-            Orderp order;
+            Supplier supplier;
             var session = SessionFactoryCloud.Open();
-            order = session.Get<Orderp>(id);
+            supplier = session.Get<Supplier>(id);
             session.Close();
-            return order;
+            return supplier;
         }
 
-        public void Update(Orderp order)
+        public void Update(Supplier supplier)
         {
             var session = SessionFactoryCloud.Open();
             var tx = session.BeginTransaction();
 
             try
             {
-                session.Update(order);
+                session.Update(supplier);
                 tx.Commit();
-                Console.WriteLine("Order {0} updated", order.Id);
+                Console.WriteLine("Supplier {0} updated", supplier.Name);
             }
             catch (Exception ex)
             {
                 if (!tx.WasCommitted) tx.Rollback();
-                throw new Exception("Error updating order : " + ex.Message);
+                throw new Exception("Error updating supplier : " + ex.Message);
             }
 
             session.Close();
         }
 
-        public void Delete(Orderp order)
+        public void Delete(Supplier supplier)
         {
             using (var session = SessionFactoryCloud.Open())
             {
@@ -68,9 +69,9 @@ namespace PracticaM6UF2.cruds
                 {
                     try
                     {
-                        session.Delete(order);
+                        session.Delete(supplier);
                         tx.Commit();
-                        Console.WriteLine("Employee {0} deleted", order.Id);
+                        Console.WriteLine("Supplier {0} deleted", supplier.Name);
                     }
                     catch (Exception ex)
                     {
@@ -79,7 +80,7 @@ namespace PracticaM6UF2.cruds
                             tx.Rollback();
                         }
 
-                        throw new Exception("Error deleting order : " + ex.Message);
+                        throw new Exception("Error deleting supplier : " + ex.Message);
                     }
                 }
 
@@ -88,3 +89,4 @@ namespace PracticaM6UF2.cruds
         }
     }
 }
+

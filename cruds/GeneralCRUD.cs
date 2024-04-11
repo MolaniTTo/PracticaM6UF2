@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using cat.itb.M6UF2EA3.connections;
+using PracticaM6UF2.connections;
 using Npgsql;
 
 namespace cat.itb.M6UF2EA3.cruds

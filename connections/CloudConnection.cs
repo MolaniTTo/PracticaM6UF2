@@ -1,7 +1,7 @@
 ﻿using System;
 using Npgsql;
 
-namespace cat.itb.M6UF2EA3.connections
+namespace PracticaM6UF2.connections
 {
     public class CloudConnection
     {
