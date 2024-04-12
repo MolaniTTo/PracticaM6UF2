@@ -19,20 +19,21 @@ namespace PracticaM6UF2.maps
         public ProductMap()
         {
             Table("PRODUCT");
-            Id(x => x.Id, "id").GeneratedBy.Native();
-            Map(x => x.Code, "code");
-            Map(x => x.Description, "description");
-            Map(x => x.CurrentStock, "currentstock");
-            Map(x => x.MinStock, "minstock");
-            Map(x => x.Price, "price");
-            References(x => x.Employee)
+            Id(x => x.Id);
+            Map(x => x.Code).Column("code");
+            Map(x => x.Description).Column("description");
+            Map(x => x.CurrentStock).Column("currentstock");
+            Map(x => x.MinStock).Column("minstock");
+            Map(x => x.Price).Column("price");
+            References(x => x.Empno)
                 .Column("empno")
                 .Cascade.All()
                 .Not.LazyLoad();
-            References(x => x.Supplier)
-                .Column("id")
-                .Cascade.All()
-                .Not.LazyLoad();
+
+            HasOne(x => x.Supplierno)
+                .PropertyRef(nameof(Supplier.Productno))
+                .Not.LazyLoad()
+                .Cascade.AllDeleteOrphan().Fetch.Join();
         }
     }
 }

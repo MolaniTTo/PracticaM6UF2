@@ -4,11 +4,70 @@ using System.Linq;
 using PracticaM6UF2.connections;
 using PracticaM6UF2.model;
 using NHibernate;
+using System.Runtime.InteropServices.Marshalling;
+using Npgsql;
 
-namespace cat.itb.M6UF2EA3.cruds
+namespace PracticaM6UF2.cruds
 {
     public class ProductCRUD
     {
+
+        public Product SelectByCodeADO(int code)
+        {
+            string query = "SELECT * FROM PRODUCT WHERE CODE = @Code";
+
+            using (NpgsqlConnection connection = new CloudConnection().GetConnection())
+            {
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Code", code);
+
+                    using (NpgsqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Product product = new Product();
+                            product.Code = Convert.ToInt32(reader["CODE"]);
+                            product.CurrentStock = Convert.ToInt32(reader["CurrentStock"]);
+                            product.Description = reader["Description"].ToString();
+                            product.MinStock = Convert.ToInt32(reader["MinStock"]);
+                            product.Price = Convert.ToDouble(reader["Price"]);
+
+                            // Agregar más campos según la estructura de tu tabla
+                            return product;
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+
+            // Si no se encuentra ningún producto con este código, se devuelve un objeto Product vacío
+            return new Product();
+        }
+
+        public bool UpdateADO(Product product)
+        {
+            string query = "UPDATE PRODUCT SET CurrentStock = @CurrentStock WHERE CODE = @Code";
+
+            using (NpgsqlConnection connection = new CloudConnection().GetConnection())
+            {
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@CurrentStock", product.CurrentStock);
+                    command.Parameters.AddWithValue("@CODE", product.Code);
+
+                   
+                    Console.WriteLine("Product {0} updated", product.Description);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    connection.Close();
+                    return rowsAffected > 0;
+
+                }
+            }
+              
+        }
+
+
         public IList<Product> SelectAll()
         {
             IList<Product> products;

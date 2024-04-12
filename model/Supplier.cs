@@ -27,10 +27,10 @@ namespace PracticaM6UF2.model
         public virtual string Zipcode { get; set; }
         public virtual int Area { get; set; }
         public virtual string Phone { get; set; }
-        public virtual Product Product { get; set; }
+        public virtual Product Productno { get; set; }
         public virtual int Amount { get; set; }
         public virtual double Credit { get; set; }
         public virtual string Remark { get; set; }
-        public virtual ISet<Orderp> Orders { get; set; } = new HashSet<Orderp>();
+        public virtual ISet<Orderp> Orders { get; set; }
     }
 }

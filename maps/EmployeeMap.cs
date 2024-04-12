@@ -23,14 +23,14 @@ namespace PracticaM6UF2.maps
         public EmployeeMap()
         {
             Table("EMPLOYEE");
-            Id(x => x.Id, "id").GeneratedBy.Native();
-            Map(x => x.Surname, "surname");
-            Map(x => x.Job, "job");
-            Map(x => x.Managerno, "managerno");
-            Map(x => x.StartDate, "startdate");
-            Map(x => x.Salary, "salary");
-            Map(x => x.Commission, "commission");
-            Map(x => x.Deptno, "deptno");
+            Id(x => x.Id);
+            Map(x => x.Surname).Column("surname");
+            Map(x => x.Job).Column("job");
+            Map(x => x.Managerno).Column("managerno");
+            Map(x => x.StartDate).Column("startdate");
+            Map(x => x.Salary).Column("salary");
+            Map(x => x.Commission).Column("commission");
+            Map(x => x.Deptno).Column("deptno");
             HasMany(x => x.Products)
                 .KeyColumn("empno")
                 .Cascade.AllDeleteOrphan()

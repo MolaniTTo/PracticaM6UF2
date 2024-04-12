@@ -12,9 +12,14 @@ namespace PracticaM6UF2
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            
+
+            //InsertEmployeesWithADO();
+            //SelectByCodeADOandUpdateADO();
+            //SelectOrdersSupplierADO();
+            SelectSuppliersWhithCreditADO();
+
 
         }
         public static void InsertEmployeesWithADO()
@@ -65,5 +70,68 @@ namespace PracticaM6UF2
 
             EmployeeCRUD.InsertADO(employees);
         }
+
+
+        public static void SelectByCodeADOandUpdateADO()
+        {
+            ProductCRUD productCRUD = new ProductCRUD();
+            Product product = productCRUD.SelectByCodeADO(100890);
+            product.CurrentStock = 8;
+            productCRUD.UpdateADO(product);
+
+            product = productCRUD.SelectByCodeADO(200376);
+            product.CurrentStock = 7;
+            productCRUD.UpdateADO(product);
+
+            product = productCRUD.SelectByCodeADO(200380);
+            product.CurrentStock = 9;
+            productCRUD.UpdateADO(product);
+
+            product = productCRUD.SelectByCodeADO(100861);
+            product.CurrentStock = 12;
+            productCRUD.UpdateADO(product);
+        }
+
+        /*Mostra la quantitat total i el cost total de les comandes fetes al proveïdor amb supplierno igual a 6. Al Program.cs
+        has d’obtenir una llista d’objectes Order utilitzant el mètode de OrderCRUD.cs anomenat
+        SelectOrdersSupplierADO que rep com a paràmetre el id del proveïdor i retorna la llista d’objectes Order que
+        tenen com supplierno el número passat com a paràmetre. Al Program.cs has de sumar totes les quantitats i tots els
+        costos dels objectes Order obtinguts, i es mostrarà per pantalla el missatge «El proveïdor amb id <supplierno> ha
+        facturat un total de <cost total> per una quantitat igual a <quantitat total>».*/
+        public static void SelectOrdersSupplierADO()
+        {
+            OrderpCRUD orderpCRUD = new OrderpCRUD();
+            IList<Orderp> orders = orderpCRUD.SelectOrdersSupplierADO(6);
+
+            double totalCost = 0;
+            double totalAmount = 0;
+
+            foreach (Orderp order in orders)
+            {
+                totalCost += order.Cost;
+                totalAmount += order.Amount;
+            }
+
+            Console.WriteLine($"El proveïdor amb id {6} ha facturat un total de {totalCost} per una quantitat igual a {totalAmount}");
+        }
+
+
+        public static void SelectSuppliersWhithCreditADO()
+        {
+            SupplierCRUD supplierCRUD = new SupplierCRUD();
+            Console.WriteLine("Introduce el crédito:");
+            int credit = Convert.ToInt32(Console.ReadLine());
+            IList<Supplier> suppliers = supplierCRUD.SelectCreditHigherThanADO(credit);
+
+            foreach (Supplier supplier in suppliers)
+            {
+                Console.WriteLine($"Id: {supplier.Id}, Name: {supplier.Name}, Credit: {supplier.Credit}");
+            }
+
+        }
+
+
+
+
     }
 }

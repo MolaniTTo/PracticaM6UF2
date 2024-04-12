@@ -17,7 +17,7 @@ namespace PracticaM6UF2.model
     public class Orderp
     {
         public virtual int Id { get; set; }
-        public virtual Supplier Supplier { get; set; }
+        public virtual Supplier Supplierno { get; set; }
         public virtual DateTime OrderDate { get; set; }
         public virtual double Amount { get; set; }
         public virtual DateTime DeliveryDate { get; set; }

@@ -21,7 +21,7 @@ namespace PracticaM6UF2.model
         public virtual int CurrentStock { get; set; }
         public virtual int MinStock { get; set; }
         public virtual double Price { get; set; }
-        public virtual Employee Employee { get; set; }
-        public virtual Supplier Supplier { get; set; }
+        public virtual Employee Empno { get; set; }
+        public virtual Supplier Supplierno { get; set; }
     }
 }

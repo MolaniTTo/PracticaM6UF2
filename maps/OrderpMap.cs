@@ -18,15 +18,15 @@ namespace PracticaM6UF2.maps
         public OrderpMap()
         {
             Table("ORDERP");
-            Id(x => x.Id, "id").GeneratedBy.Native();
-            References(x => x.Supplier)
+            Id(x => x.Id);
+            References(x => x.Supplierno)
                 .Column("supplierno")
                 .Not.LazyLoad()
                 .Fetch.Join();
-            Map(x => x.OrderDate, "orderdate");
-            Map(x => x.Amount, "amount");
-            Map(x => x.DeliveryDate, "deliverydate");
-            Map(x => x.Cost, "cost");
+            Map(x => x.OrderDate).Column("orderdate");
+            Map(x => x.Amount).Column("amount");
+            Map(x => x.DeliveryDate).Column("deliverydate");
+            Map(x => x.Cost).Column("cost");
         }
 
     }

@@ -4,20 +4,100 @@ using PracticaM6UF2.connections;
 using PracticaM6UF2.model;
 using System.Linq;
 using System.Linq.Expressions;
+using Npgsql;
+using System.Xml.Linq;
 
 namespace PracticaM6UF2.cruds
 {
     public class EmployeeCRUD
     {
+
+
+        public Employee SelectByNameADO(int name)
+        {
+            CloudConnection db = new CloudConnection();
+            var conn = db.GetConnection();
+
+            string query = "SELECT * FROM EMPLOYEE WHERE name > @Name";
+            using var cmd = new NpgsqlCommand(query, conn);
+
+            cmd.Parameters.AddWithValue("Name", name);
+            cmd.Prepare();
+
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            Employee employee = null;
+
+            while (rdr.Read())
+            {
+                   employee = new Employee
+                   {
+                    Id = rdr.GetInt32(0),
+                    Surname = rdr.GetString(1),
+                    Job = rdr.GetString(2),
+                    Managerno = rdr.GetInt32(3),
+                    StartDate = rdr.GetDateTime(4),
+                    Salary = rdr.GetDouble(5),
+                    Commission = rdr.GetDouble(6),
+                    Deptno = rdr.GetInt32(7)
+                };
+            }
+            conn.Close();
+            return employee;
+        }
+
+        public static void DeleteADO(Employee employee)
+        {
+            if (employee == null)
+            {
+                Console.WriteLine("No s'ha proporcionat cap empleat per eliminar.");
+                return;
+            }
+
+
+            CloudConnection db = new CloudConnection();
+            var conn = db.GetConnection();
+
+            string query = "DELETE * FROM EMPLOYEE WHERE name > @Name";
+            using var cmd = new NpgsqlCommand(query, conn);
+
+            cmd.Parameters.AddWithValue("Name", name);
+            cmd.Prepare();
+
+            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+
+            Employee employee = null;
+
+            while (rdr.Read())
+            {
+                employee = new Employee
+                {
+                    Id = rdr.GetInt32(0),
+                    Surname = rdr.GetString(1),
+                    Job = rdr.GetString(2),
+                    Managerno = rdr.GetInt32(3),
+                    StartDate = rdr.GetDateTime(4),
+                    Salary = rdr.GetDouble(5),
+                    Commission = rdr.GetDouble(6),
+                    Deptno = rdr.GetInt32(7)
+                };
+            }
+            conn.Close();
+            return employee;
+
+        }
+        
+
+
+
         public static void InsertADO(List<Employee> employees)
         {
-            string query ="INSERT INTO EMPLOPYEE (surname, job, managerno, startdate, salary, commission, deptno) " +
+            string query ="INSERT INTO EMPLOYEE (surname, job, managerno, startdate, salary, commission, deptno) " +
                 "VALUES (@Surname, @Job, @Managerno, @Startdate, @Salary, @Commission, @Deptno)";
             try
             {
                 using (var conn = new CloudConnection().GetConnection())
                 {
-                    conn.Open();
 
                     foreach (var emp in employees)
                     {
@@ -29,7 +109,7 @@ namespace PracticaM6UF2.cruds
                             cmd.Parameters.AddWithValue("@Managerno", emp.Managerno);
                             cmd.Parameters.AddWithValue("@Startdate", emp.StartDate);
                             cmd.Parameters.AddWithValue("@Salary", emp.Salary);
-                            cmd.Parameters.AddWithValue("@Commission", emp.Commission);
+                            cmd.Parameters.AddWithValue("@Commission", emp.Commission != null ? emp.Commission : DBNull.Value);
                             cmd.Parameters.AddWithValue("@Deptno", emp.Deptno);
                             cmd.ExecuteNonQuery();
                         }

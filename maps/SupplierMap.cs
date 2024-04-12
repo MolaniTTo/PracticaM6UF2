@@ -25,21 +25,24 @@ namespace PracticaM6UF2.maps
         public SupplierMap()
         {
             Table("SUPPLIER");
-            Id(x => x.Id, "id").GeneratedBy.Native();
-            Map(x => x.Name, "name");
-            Map(x => x.Address, "address");
-            Map(x => x.City, "city");
-            Map(x => x.Stcode, "stcode");
-            Map(x => x.Zipcode, "zipcode");
-            Map(x => x.Area, "area");
-            Map(x => x.Phone, "phone");
-            References(x => x.Product)
-                .Column("id")
+            Id(x => x.Id);
+            Map(x => x.Name).Column("name");
+            Map(x => x.Address).Column("address");
+            Map(x => x.City).Column("city");
+            Map(x => x.Stcode).Column("stcode");
+            Map(x => x.Zipcode).Column("zipcode");
+            Map(x => x.Area).Column("area");
+            Map(x => x.Phone).Column("phone");
+
+            References(x => x.Productno)
+                .Column("productno")
                 .Not.LazyLoad()
                 .Fetch.Join();
-            Map(x => x.Amount, "amount");
-            Map(x => x.Credit, "credit");
-            Map(x => x.Remark, "remark");
+
+            Map(x => x.Amount).Column("amount");
+            Map(x => x.Credit).Column("credit");
+            Map(x => x.Remark).Column("remark");
+
             HasMany(x => x.Orders)
                 .KeyColumn("supplierno")
                 .Cascade.All()
