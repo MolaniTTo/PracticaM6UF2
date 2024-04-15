@@ -20,6 +20,6 @@ namespace PracticaM6UF2.model
         public virtual double Salary { get; set; }
         public virtual double ? Commission { get; set; }
         public virtual int Deptno { get; set; }
-        public virtual ISet<Product> Products { get; set; } = new HashSet<Product>();
+        public virtual ISet<Product> Products { get; set; }
     }
 }

@@ -6,89 +6,67 @@ using System.Linq;
 using System.Linq.Expressions;
 using Npgsql;
 using System.Xml.Linq;
+using NHibernate.SqlCommand;
 
 namespace PracticaM6UF2.cruds
 {
     public class EmployeeCRUD
     {
+        public Employee SelectByName(string surname)
+        {
+            Employee employee;
+            using (var session = SessionFactoryCloud.Open())
+            {
+                employee = (from e in session.Query<Employee>() where e.Surname == surname select e).FirstOrDefault();
+                session.Close();
+            }
+            return employee;
+        }
 
-
-        public Employee SelectByNameADO(int name)
+        public Employee SelectByNameADO(string surname)
         {
             CloudConnection db = new CloudConnection();
             var conn = db.GetConnection();
 
-            string query = "SELECT * FROM EMPLOYEE WHERE name > @Name";
-            using var cmd = new NpgsqlCommand(query, conn);
+            string query = $"SELECT * FROM employee WHERE surname = {surname}";
+            var cmd = new NpgsqlCommand(query, conn);
 
-            cmd.Parameters.AddWithValue("Name", name);
-            cmd.Prepare();
+            NpgsqlDataReader rdr = cmd.ExecuteReader();
 
-            using NpgsqlDataReader rdr = cmd.ExecuteReader();
+            Employee employee = new Employee();
 
-            Employee employee = null;
-
-            while (rdr.Read())
+            if (rdr.Read())
             {
-                   employee = new Employee
-                   {
-                    Id = rdr.GetInt32(0),
-                    Surname = rdr.GetString(1),
-                    Job = rdr.GetString(2),
-                    Managerno = rdr.GetInt32(3),
-                    StartDate = rdr.GetDateTime(4),
-                    Salary = rdr.GetDouble(5),
-                    Commission = rdr.GetDouble(6),
-                    Deptno = rdr.GetInt32(7)
-                };
+                employee.Id = rdr.GetInt32(0);
+                employee.Surname = rdr.GetString(1);
+                employee.Job = rdr.GetString(2);
+                employee.Managerno = rdr.GetInt32(3);
+                employee.StartDate = rdr.GetDateTime(4);
+                employee.Salary = rdr.GetDouble(5);
+                employee.Commission = rdr.IsDBNull(6) ? null : rdr.GetDouble(6);
+                employee.Deptno = rdr.GetInt32(7);
             }
+
             conn.Close();
             return employee;
         }
 
-        public static void DeleteADO(Employee employee)
+        public void DeleteEmployeeWithADO(Employee employee)
         {
-            if (employee == null)
-            {
-                Console.WriteLine("No s'ha proporcionat cap empleat per eliminar.");
-                return;
-            }
-
 
             CloudConnection db = new CloudConnection();
             var conn = db.GetConnection();
 
-            string query = "DELETE * FROM EMPLOYEE WHERE name > @Name";
+            string query = "DELETE FROM employee WHERE surname = @Surname";
             using var cmd = new NpgsqlCommand(query, conn);
 
-            cmd.Parameters.AddWithValue("Name", name);
+            cmd.Parameters.AddWithValue("Surname", employee.Surname);
             cmd.Prepare();
+            cmd.ExecuteNonQuery();
 
-            using NpgsqlDataReader rdr = cmd.ExecuteReader();
-
-            Employee employee = null;
-
-            while (rdr.Read())
-            {
-                employee = new Employee
-                {
-                    Id = rdr.GetInt32(0),
-                    Surname = rdr.GetString(1),
-                    Job = rdr.GetString(2),
-                    Managerno = rdr.GetInt32(3),
-                    StartDate = rdr.GetDateTime(4),
-                    Salary = rdr.GetDouble(5),
-                    Commission = rdr.GetDouble(6),
-                    Deptno = rdr.GetInt32(7)
-                };
-            }
+            Console.WriteLine("Employee {0} deleted", employee.Surname);
             conn.Close();
-            return employee;
-
         }
-        
-
-
 
         public static void InsertADO(List<Employee> employees)
         {

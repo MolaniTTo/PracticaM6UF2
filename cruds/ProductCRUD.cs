@@ -11,6 +11,20 @@ namespace PracticaM6UF2.cruds
 {
     public class ProductCRUD
     {
+        public IList<Product> SelectByPriceLowThanWithQueryOver(double price)
+        {
+            IList<Product> products;
+            using (var session = SessionFactoryCloud.Open())
+            {
+                products = session.QueryOver<Product>()
+                    .Where(p => p.Price < price)
+                    .Select(p => p.Code, p => p.Description)
+                    .List<Product>();
+                session.Close();
+            }
+            return products;
+           
+        }
 
         public Product SelectByCodeADO(int code)
         {

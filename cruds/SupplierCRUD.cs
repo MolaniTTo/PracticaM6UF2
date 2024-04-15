@@ -14,6 +14,18 @@ namespace PracticaM6UF2.cruds
     public class SupplierCRUD
     {
 
+        public IList<Supplier> SelectByCity(string city)
+        {
+            IList<Supplier> suppliers;
+            using (var session = SessionFactoryCloud.Open())
+            {
+                suppliers = (from s in session.Query<Supplier>() where s.City == city select s).ToList();
+                session.Close();
+            }
+            return suppliers;
+        }
+
+
         public IList<Supplier> SelectCreditHigherThanADO(int credit)
         {
             CloudConnection db = new CloudConnection();
