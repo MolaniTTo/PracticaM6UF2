@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NHibernate.Criterion;
+using NHibernate;
 using Npgsql;
 using PracticaM6UF2.connections;
 using PracticaM6UF2.model;
@@ -19,7 +20,10 @@ namespace PracticaM6UF2.cruds
             IList<Orderp> orders;
             using (var session = SessionFactoryCloud.Open())
             {
-                orders = (from o in session.Query<Orderp>() where o.Cost > cost && o.Amount == amount select o).ToList();
+                ICriteria criteria = session.CreateCriteria<Orderp>();
+                criteria.Add(Restrictions.Gt("Cost", cost));
+                criteria.Add(Restrictions.Gt("Amount", amount));
+                orders = criteria.List<Orderp>();
                 session.Close();
             }
             return orders;
@@ -124,7 +128,7 @@ namespace PracticaM6UF2.cruds
                     {
                         session.Delete(order);
                         tx.Commit();
-                        Console.WriteLine("Employee {0} deleted", order.Id);
+                        Console.WriteLine("Orderp {0} deleted", order.Id);
                     }
                     catch (Exception ex)
                     {

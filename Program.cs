@@ -14,22 +14,92 @@ namespace PracticaM6UF2
     {
         static void Main()
         {
+            Console.WriteLine("0.Reestablir la BDD");
+            Console.WriteLine("1.Insertar empleados amb ADO");
+            Console.WriteLine("2.Seleccionar per codi i actualitzar amb ADO");
+            Console.WriteLine("3.Seleccionar comandes per proveïdor amb ADO");
+            Console.WriteLine("4.Seleccionar proveïdors amb crèdit superior a un valor amb ADO");
+            Console.WriteLine("5.Seleccionar empleat per nom i eliminar amb ADO");
+            Console.WriteLine("6.Insertar nous productes i proveïdors");
+            Console.WriteLine("7.Actualitzar crèdit dels proveïdors per ciutat");
+            Console.WriteLine("8.Seleccionar tots els productes");
+            Console.WriteLine("9.Seleccionar proveïdors per empleat");
+            Console.WriteLine("10.Seleccionar comandes per cost i quantitat");
+            Console.WriteLine("11.Seleccionar productes per preu inferior a un valor amb QueryOver");
+            Console.WriteLine("12.Seleccionar proveïdor amb la quantitat mínima amb Subqueries del QueryOver");
+            int option = Convert.ToInt32(Console.ReadLine());
+            switch (option)
+            {
+                case 0:
+                    GeneralCRUD();
+                    break;
+                case 1:
+                    InsertEmployeesWithADO();
+                    break;
+                case 2:
+                    SelectByCodeADOandUpdateADO();
+                    break;
+                case 3:
+                    SelectOrdersSupplierADO();
+                    break;
+                case 4:
+                    SelectSuppliersWhithCreditADO();
+                    break;
+                case 5:
+                    SelectEmployeeByNameAndDelete();
+                    break;
+                case 6:
+                    InsertNewProductsAndSuppliers();
+                    break;
+                case 7:
+                    UpdateCreditSuppliersByCity();
+                    break;
+                case 8:
+                    SelectAllProducts();
+                    break;
+                case 9:
+                    SelectSuppliersByEmployee();
+                    break;
+                case 10:
+                    SelectOrdersByCostAndAmount();
+                    break;
+                case 11:
+                    SelectByPriceLowThan();
+                    break;
+                case 12:
+                    SelectLowestAmount();
+                    break;
+                default:
+                    Console.WriteLine("Opción no válida");
+                    break;
+            };
+        }
 
-            //InsertEmployeesWithADO();
-            //SelectByCodeADOandUpdateADO();
-            //SelectOrdersSupplierADO();
-            //SelectSuppliersWhithCreditADO();
-            //SelectEmployeeByNameAndDelete();
-            //InsertNewProductsAndSuppliers();
-            //UpdateCreditSuppliersByCity();
-            //SelectAllProducts();
-            //SelectSuppliersByEmployee();
-            SelectOrdersByCostAndAmount();
-
-
-
+        public static void GeneralCRUD()
+        {
+            GeneralCrud generalCrud = new GeneralCrud();
+            List<string> tables = new List<string> { "EMPLOYEE", "PRODUCT", "SUPPLIER", "ORDERP" };
+            int option;
+            Console.WriteLine("1. Drop tables");
+            Console.WriteLine("2. Run script shop.sql");
+            option = Convert.ToInt32(Console.ReadLine());
+            switch (option)
+            {
+                case 1:
+                    generalCrud.DropTables(tables);
+                    break;
+                case 2:
+                    generalCrud.RunScriptShop();
+                    break;
+                default:
+                    Console.WriteLine("Opción no válida");
+                    break;
+            }
 
         }
+
+        
+
         public static void InsertEmployeesWithADO()
         {
             List<Employee> employees = new List<Employee>
@@ -61,7 +131,7 @@ namespace PracticaM6UF2
                     Managerno = 7,
                     StartDate = new DateTime(1989, 3, 18),
                     Salary = 172000,
-                    Commission = null, // O null o un valor por defecto, dependiendo de tu definición de la columna en la base de datos
+                    Commission = null, 
                     Deptno = 10
                 },
                 new Employee
@@ -71,7 +141,7 @@ namespace PracticaM6UF2
                     Managerno = 7,
                     StartDate = new DateTime(2001, 10, 25),
                     Salary = 192000,
-                    Commission = null, // O null o un valor por defecto, dependiendo de tu definición de la columna en la base de datos
+                    Commission = null, 
                     Deptno = 10
                 }
             };
@@ -222,21 +292,24 @@ namespace PracticaM6UF2
         }
 
 
-
-         public static void SelectProductsByPrice()
+        public static void SelectByPriceLowThan()
         {
             ProductCRUD productCRUD = new ProductCRUD();
-            IList<object[]> products = productCRUD.SelectByPriceLowThanWithQueryOver(30);
+            IList<object[]> products = productCRUD.SelectByPriceLowThan(30);
 
-            foreach (object[] product in products)
+            foreach (var product in products)
             {
                 Console.WriteLine($"Code: {product[0]}, Description: {product[1]}");
             }
-           
         }
 
+        public static void SelectLowestAmount()
+        {
+            SupplierCRUD supplierCRUD = new SupplierCRUD();
+            Supplier supplier = supplierCRUD.SelectLowestAmount();
 
-
+            Console.WriteLine($"Supplier: {supplier.Name}, Amount: {supplier.Amount}, CurrentStock: {supplier.Productno.CurrentStock}");
+        }
 
     }
 }

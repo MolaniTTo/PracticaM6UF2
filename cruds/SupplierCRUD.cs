@@ -8,18 +8,37 @@ using System.Threading.Tasks;
 using Npgsql;
 using NHibernate.Type;
 using NHibernate.Driver;
+using NHibernate.Criterion;
+using NHibernate;
 
 namespace PracticaM6UF2.cruds
 {
     public class SupplierCRUD
     {
 
+        public Supplier SelectLowestAmount()
+        {
+            Supplier supplier;
+            using (var session = SessionFactoryCloud.Open())
+            {
+                var subquery = QueryOver.Of<Supplier>()
+                    .Select(Projections.Min<Supplier>(s => s.Amount));
+
+                supplier = session.QueryOver<Supplier>()
+                    .WithSubquery.WhereProperty(s => s.Amount).Eq(subquery)
+                    .SingleOrDefault();
+                session.Close();
+            }
+            return supplier;
+        }
+
         public IList<Supplier> SelectByCity(string city)
         {
             IList<Supplier> suppliers;
             using (var session = SessionFactoryCloud.Open())
             {
-                suppliers = (from s in session.Query<Supplier>() where s.City == city select s).ToList();
+                string hql = "FROM Supplier WHERE City = :city";
+                suppliers = session.CreateQuery(hql).SetParameter("city", city).List<Supplier>();
                 session.Close();
             }
             return suppliers;

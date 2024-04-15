@@ -22,6 +22,7 @@ namespace PracticaM6UF2.maps
             References(x => x.Supplierno)
                 .Column("supplierno")
                 .Not.LazyLoad()
+                .Cascade.AllDeleteOrphan()
                 .Fetch.Join();
             Map(x => x.OrderDate).Column("orderdate");
             Map(x => x.Amount).Column("amount");

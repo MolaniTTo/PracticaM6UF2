@@ -17,8 +17,10 @@ namespace PracticaM6UF2.cruds
             Employee employee;
             using (var session = SessionFactoryCloud.Open())
             {
-                employee = (from e in session.Query<Employee>() where e.Surname == surname select e).FirstOrDefault();
+                string hql = "FROM Employee WHERE Surname = :surname";
+                employee = session.CreateQuery(hql).SetParameter("surname", surname).UniqueResult<Employee>();
                 session.Close();
+
             }
             return employee;
         }

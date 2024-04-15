@@ -25,10 +25,12 @@ namespace PracticaM6UF2.maps
             Map(x => x.CurrentStock).Column("currentstock");
             Map(x => x.MinStock).Column("minstock");
             Map(x => x.Price).Column("price");
+
             References(x => x.Empno)
                 .Column("empno")
+                .Not.LazyLoad()
                 .Cascade.All()
-                .Not.LazyLoad();
+                .Fetch.Join();
 
             HasOne(x => x.Supplierno)
                 .PropertyRef(nameof(Supplier.Productno))

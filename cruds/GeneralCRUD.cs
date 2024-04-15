@@ -4,7 +4,7 @@ using System.IO;
 using PracticaM6UF2.connections;
 using Npgsql;
 
-namespace cat.itb.M6UF2EA3.cruds
+namespace PracticaM6UF2.cruds
 {
     public class GeneralCrud
     {
@@ -35,8 +35,8 @@ namespace cat.itb.M6UF2EA3.cruds
         {
             CloudConnection db = new CloudConnection();
             var conn = db.GetConnection();
-
-            string script = File.ReadAllText("../../MyFiles/shop.sql");
+            
+            string script = File.ReadAllText("../../../MyFiles/shop.sql");
             var cmd = new NpgsqlCommand(script, conn);
             try
             {

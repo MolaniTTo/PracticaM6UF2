@@ -31,11 +31,14 @@ namespace PracticaM6UF2.maps
             Map(x => x.Salary).Column("salary");
             Map(x => x.Commission).Column("commission");
             Map(x => x.Deptno).Column("deptno");
+
             HasMany(x => x.Products)
                 .KeyColumn("empno")
+                .Not.LazyLoad()
+                .Inverse()
                 .Cascade.AllDeleteOrphan()
-                .AsSet()
-                .Not.LazyLoad();
+                .Fetch.Join()
+                .AsSet();
         }
     }
 }

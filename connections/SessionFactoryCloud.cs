@@ -7,7 +7,7 @@ namespace PracticaM6UF2.connections
 {
     public class SessionFactoryCloud
     {
-        private static string ConnectionString = "Server=salt.db.elephantsql.com;Port=5432;Database=qjycudrm;User Id=qjycudrm;Password=QJsJC7hDPRbUmFy0eFq0ksmWZdlV5BjB;";
+        private static string ConnectionString = "Server=salt.db.elephantsql.com;Port=5432;Database=dojhyjni;User Id=dojhyjni;Password=TjLqhmBHaysviUzvrowkfLbICvX2RX09;";
         private static ISessionFactory _session;
 
         public static ISessionFactory CreateSession()
